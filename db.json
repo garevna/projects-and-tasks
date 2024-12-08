@@ -1,0 +1,64 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "order": 3,
+      "title": "Default Values",
+      "description": "By default, inject assumes that the injected key is provided somewhere in the parent chain. In the case where the key is not provided, there will be a runtime warning.",
+      "date": 1733384812771,
+      "status": "processing..."
+    },
+    {
+      "id": "2",
+      "order": 4,
+      "title": "Injection keys",
+      "description": "So far, we have been using string injection keys in the examples. If you are working in a large application with many dependency providers, or you are authoring components that are going to be used by other developers, it is best to use Symbol injection keys to avoid potential collisions.",
+      "date": 1733385412771,
+      "status": "processing..."
+    },
+    {
+      "id": "3",
+      "order": 2,
+      "title": "Provide | Inject",
+      "description": "When using reactive provide / inject values, it is recommended to keep any mutations to reactive state inside of the provider whenever possible. This ensures that the provided state and its possible mutations are co-located in the same component, making it easier to maintain in the future.",
+      "date": 1733387712771,
+      "status": "processing..."
+    },
+    {
+      "id": "4",
+      "order": 1,
+      "date": 1733682143863,
+      "title": "The Best Project",
+      "description": "...",
+      "status": "Started"
+    }
+  ],
+  "tasks": [
+    {
+      "projectId": 1,
+      "order": 0,
+      "date": 1733384812771,
+      "description": "",
+      "performer": "Jerry",
+      "status": "In work",
+      "deadline": 1734681425344
+    }
+  ],
+  "performers": [
+    {
+      "id": 1,
+      "name": "Jerry",
+      "speciality": "dev"
+    },
+    {
+      "id": 2,
+      "name": "Robert",
+      "speciality": "manager"
+    },
+    {
+      "id": 3,
+      "name": "Jeck",
+      "speciality": "manager"
+    }
+  ]
+}
