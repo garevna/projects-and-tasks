@@ -32,13 +32,8 @@ yarn dev
 yarn build
 ```
 
-```sh
-npm run build
-npm run test:e2e
-```
-
 ### Lint with [ESLint](https://eslint.org/)
 
 ```sh
-npm run lint
+yarn lint
 ```
