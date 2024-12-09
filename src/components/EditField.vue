@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-// import type { Ref } from 'vue'
 import type { Project } from '@/types/project'
 import type { Task } from '@/types/task'
 import type { ProjectHeader } from '@/types/project-header'
 import type { TaskHeader } from '@/types/task-header'
 import { getFieldValue } from '@/utils/getFieldValue'
+import { tableFieldsWidth } from '@/configs/tableFieldsWidth'
 
 const emit = defineEmits<{
   (e: 'update', payload: { id: number; field: string; value: string | number }): void
@@ -28,23 +28,11 @@ const other = props.header.field !== 'id' && props.header.field !== 'description
 const type = props.header.field === 'date' || props.header.field === 'deadline' ? 'date' : 'text'
 
 const cellWidth = computed(() => {
-  const fieldsWidth = {
-    id: 36,
-    date: 100,
-    title: 180,
-    status: 80,
-    description: 360,
-    deadline: 80,
-    performer: 120,
-    default: 80,
-  }
-  fieldsWidth.get = function (key: string) {
-    return Object.keys(this).includes(key) ? this[key] : this.default
-  }
+  type Key = keyof typeof tableFieldsWidth
 
-  const key: string = props.header.field
+  const key: Key = props.header.field
 
-  return fieldsWidth.get(key) + 'px'
+  return tableFieldsWidth[key] + 'px'
 })
 
 function onInput($event: any) {
