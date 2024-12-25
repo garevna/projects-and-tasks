@@ -1,24 +1,15 @@
-interface Project {
-  id: number
-  date: number
-  order: number
-  title: string
-  description: string
-  status: string
-}
+import type { ProjectHeader } from '@/types'
 
-type HeaderField = keyof Project
-
-interface Header {
-  order: number
-  title: string
-  field: HeaderField
-}
-
-export const projectHeaders: Header[] = [
-  { order: 0, title: 'Project id', field: 'id' },
-  { order: 1, title: 'Date', field: 'date' },
-  { order: 2, title: 'Project name', field: 'title' },
-  { order: 2, title: 'Status', field: 'status' },
-  { order: 3, title: 'Project description', field: 'description' },
+export const projectHeaders: ProjectHeader[] = [
+  { order: 0, title: 'Project id', field: 'id', type: 'not-editable', align: 'center' },
+  { order: 1, title: 'Date', field: 'date', type: 'date', align: 'center' },
+  { order: 2, title: 'Project name', field: 'title', type: 'string', align: 'left' },
+  { order: 3, title: 'Status', field: 'status', type: 'string', align: 'center' },
+  {
+    order: 4,
+    title: 'Project description',
+    field: 'description',
+    type: 'text',
+  },
+  { order: 5, title: 'Tasks', field: 'tasks', type: 'action', align: 'center' },
 ]

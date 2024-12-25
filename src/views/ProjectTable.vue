@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { onBeforeMount } from 'vue'
-import ConfiguredTable from '@/components/ConfiguredTable.vue'
-import { projectHeaders } from '@/configs/projectHeaders'
+import ComplexTable from '@/components/ComplexTable.vue'
+// import { projectHeaders } from '@/configs/projectHeaders'
 import { useProjectStore } from '@/stores/projects'
 
-const store = useProjectStore()
+// const store = useProjectStore()
 
 onBeforeMount(async () => {
-  await store.getProjects()
+  await useProjectStore().updateTasks()
 })
 </script>
 
 <template>
   <main>
-    <ConfiguredTable :headers="projectHeaders" />
+    <ComplexTable storeName="Project" />
   </main>
 </template>

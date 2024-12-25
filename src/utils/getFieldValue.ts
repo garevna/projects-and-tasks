@@ -1,31 +1,24 @@
-import type { Project } from '@/types/project'
-import type { Task } from '@/types/task'
-import type { ProjectHeader } from '@/types/project-header'
-import type { TaskHeader } from '@/types/task-header'
+import { projectHeaders, taskHeaders } from '@/configs'
+import type { Project, Task } from '@/types'
 
-function getProjectFieldValue(project: Project, header: ProjectHeader): string | number {
-  const value = project[header.field]
-  return header.field === 'date' ? new Date(value).toISOString().slice(0, 10) : value
-}
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-function getTaskFieldValue(task: Task, header: TaskHeader) {
-  const value = task[header.field]
-  return header.field === 'date' || header.field === 'deadline'
-    ? new Date(value).toISOString().slice(0, 10)
-    : value
-}
+export function getFieldValue<T extends Project | Task>(object: T, field: keyof T): any {
+  if (object === null || field === undefined) return ''
+  if (!(field in object)) return ''
 
-export function getFieldValue(object: object, header: object): string | number {
-  if (!object) return ''
-  const isProject = !Object.keys(object).includes('deadline')
+  const value = object[field]
 
-  if (isProject) {
-    const sourceData = object as Project
-    const sourceHeader = header as ProjectHeader
-    return getProjectFieldValue(sourceData, sourceHeader)
-  } else {
-    const sourceData = object as Task
-    const sourceHeader = header as TaskHeader
-    return getTaskFieldValue(sourceData, sourceHeader)
-  }
+  const projectFieldType = projectHeaders.find((project) => project.field === field)?.type
+  const taskFieldType = taskHeaders.find((task) => task.field === field)?.type
+
+  const type = projectFieldType || taskFieldType
+
+  if (!type) return value
+
+  const result =
+    type === 'date' && typeof value === 'number'
+      ? new Date(value).toISOString().slice(0, 10)
+      : value
+  return result
 }

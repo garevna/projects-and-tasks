@@ -1,9 +1,10 @@
-<!-- <script setup lang="ts">
-</script> -->
+<script setup lang="ts">
+const model = defineModel({ default: 'Drag' })
+</script>
 
 <template>
   <div class="button b2" id="switch-button">
-    <input type="checkbox" class="checkbox" />
+    <input type="checkbox" class="checkbox" :checked="model !== 'Drag'" />
     <div class="knobs">
       <span>DRAG</span>
     </div>
@@ -12,19 +13,6 @@
 </template>
 
 <style scoped>
-/* .button-cover:before {
-  counter-increment: button-counter;
-  content: counter(button-counter);
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  color: #d7e3e3;
-  font-size: 12px;
-  line-height: 1;
-  padding: 5px;
-} */
-
-/* .button-cover, */
 .knobs,
 .layer {
   position: absolute;
@@ -36,11 +24,8 @@
 
 .button {
   position: relative;
-  /* top: 50%; */
   width: 132px;
   height: 36px;
-  /* margin: -20px auto 0 auto; */
-  /* overflow: hidden; */
 }
 
 .button.r,
@@ -69,8 +54,9 @@
 
 .layer {
   width: 100%;
-  background-color: #dee;
+  background-color: var(--vt-c-green-soft);
   transition: 0.3s ease all;
+  border-radius: 4px;
   z-index: 1;
 }
 
@@ -95,32 +81,37 @@
   left: 0;
   height: 32px;
   width: 68px;
-  background-color: #09b;
+  background-color: var(--vt-c-green);
 }
 
 #switch-button .knobs:after {
   content: 'EDIT';
   right: 0;
-  color: #4e4e4e;
+  color: var(--vt-c-black-mute);
 }
 
 #switch-button .knobs span {
   display: inline-block;
   left: 4px;
-  color: #fff;
+  color: var(--vt-c-white);
   z-index: 1;
 }
 
 #switch-button .checkbox:checked + .knobs span {
-  color: #4e4e4e;
+  color: var(--vt-c-black-mute);
+}
+
+#switch-button:hover .knobs:after,
+#switch-button:hover .checkbox:checked + .knobs span {
+  color: var(--vt-c-green-dark);
 }
 
 #switch-button .checkbox:checked + .knobs:before {
   left: 66px;
-  background-color: #097;
+  background-color: var(--vt-c-green-light);
 }
 
 #switch-button .checkbox:checked + .knobs:after {
-  color: #fff;
+  color: var(--vt-c-white);
 }
 </style>

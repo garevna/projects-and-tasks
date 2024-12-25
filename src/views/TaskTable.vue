@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import ComplexTable from '@/components/ComplexTable.vue'
+// import { computed } from 'vue'
 const props = defineProps({
   projectId: String,
+  projectTitle: String,
 })
 
-const tableHeader = computed(() => props.projectId)
+// const tableHeader = computed(() => props.projectTitle)
 </script>
 
 <template>
   <div class="main">
-    <h1>{{ tableHeader }}</h1>
+    <h1>{{ props.projectTitle }}</h1>
+    <ComplexTable storeName="Task" filter="props.projectId" />
   </div>
 </template>
 

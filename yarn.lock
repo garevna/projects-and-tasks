@@ -1421,6 +1421,13 @@
   resolved "https://registry.yarnpkg.com/@vue/tsconfig/-/tsconfig-0.7.0.tgz#67044c847b7a137b8cbfd6b23104c36dbaf80d1d"
   integrity sha512-ku2uNz5MaZ9IerPPUyOHzyjhXoX2kVJaVf7hL315DC17vS6IiZRmmCPfggNbU16QTvM80+uYYy3eYJB59WCtvg==
 
+"@vuepic/vue-datepicker@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@vuepic/vue-datepicker/-/vue-datepicker-10.0.0.tgz#46b88a7b82a76ce6e2576581cc086543161a6e62"
+  integrity sha512-ujlk3ahftVQpyCJ8hq7TmOOHrf/XFJI1ZcAh/FRB5Ci62Vq5HmHf6xux5KVi5SPUFRTJY78m+uDhYy1M+8RZ9w==
+  dependencies:
+    date-fns "^4.1.0"
+
 "@vueuse/core@^12.0.0":
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-12.0.0.tgz#9b07923ca24a6b5873bf614888c7d0f796cef7d2"
@@ -1951,6 +1958,11 @@ data-urls@^5.0.0:
   dependencies:
     whatwg-mimetype "^4.0.0"
     whatwg-url "^14.0.0"
+
+date-fns@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
+  integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
 
 dayjs@^1.10.4, dayjs@^1.11.10:
   version "1.11.13"

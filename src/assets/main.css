@@ -5,3 +5,22 @@
   padding: 16px;
   font-weight: normal;
 }
+
+th {
+  background: var(--vt-c-black-mute);
+  color: var(--vt-c-white-mute);
+  vertical-align: middle;
+  padding: 8px 12px;
+}
+
+th::after {
+  content: '▼';
+}
+
+svg {
+  fill: #687;
+}
+
+svg:hover {
+  fill: #075;
+}

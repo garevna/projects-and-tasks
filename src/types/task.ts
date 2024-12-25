@@ -1,5 +1,6 @@
 export interface Task {
-  id: number
+  id: string
+  projectId: string
   date: number
   deadline: number
   order: number

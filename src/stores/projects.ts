@@ -2,84 +2,123 @@ import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { getBackAPI } from './helpers/getBackAPI'
-import type { Project } from '@/types/project'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-interface Moved {
-  element: any
-  newIndex: number
-  oldIndex: number
-}
+import type { Project, Moved, Modified } from '@/types'
+import { useTaskStore } from './tasks'
+import { getPropValue } from '@/utils'
 
 export const useProjectStore = defineStore('projects', () => {
   const api = getBackAPI()
-  type ProjectList = Awaited<ReturnType<typeof getProjects>>
+  type ProjectList = Awaited<ReturnType<typeof fetchRecords>>
 
-  const rawProjects: ProjectList = []
+  const { calcTasksForProjects } = useTaskStore()
 
-  const projects: ProjectList = reactive([])
+  const rawList: ProjectList = []
 
-  async function getProjects(): Promise<Array<Project>> {
+  const records: ProjectList = reactive([])
+
+  async function fetchRecords(): Promise<Array<Project>> {
     const result: Project[] = await axios(`${api}projects`).then((res) => res.data)
-    rawProjects.push(...result)
+    rawList.push(...result)
 
-    updateProjects()
+    updateRecords()
 
     return result
   }
 
-  function updateProjects() {
-    projects.length = 0
-    projects.push(
-      ...rawProjects.sort((a, b) => {
+  type TasksOfProjects = {
+    [key: string]: number
+  }
+
+  function updateRecords() {
+    records.length = 0
+    records.push(
+      ...rawList.sort((a: Project, b: Project) => {
         return a.order < b.order ? -1 : a.order > b.order ? 1 : 0
       }),
     )
+  }
+
+  function updateTasks() {
+    const tasks: TasksOfProjects = calcTasksForProjects() as TasksOfProjects
+    Object.keys(tasks).forEach((key) => {
+      const project = rawList.find((project) => project.id === key)
+      if (project) project.tasks = tasks[key]
+    })
+    rawList.forEach((project) =>
+      Object.assign(project, {
+        tasks: getPropValue(tasks, project.id),
+      }),
+    )
+
+    updateRecords()
+    console.log(rawList)
+    console.log(records)
+  }
+
+  function filter(field: string, value: string | number) {
+    if (!field || !value) {
+      updateRecords()
+      return
+    }
+    const propName = field as keyof Project
+    records.length = 0
+    records.push(...rawList.filter((record: Project) => getPropValue(record, propName) === value))
+  }
+
+  function sort(field: string, value: string | number, ascending: boolean = true) {
+    if (!field || !value) {
+      updateRecords()
+      return
+    }
+    const propName = field as keyof Project
+    if (ascending) {
+      records.sort((a, b) => {
+        if (a[propName] < b[propName]) return 1
+        else {
+          if (a[propName] > b[propName]) return -1
+          else return 0
+        }
+      })
+    } else {
+      records.sort((a, b) => {
+        if (a[propName] < b[propName]) return -1
+        else {
+          if (a[propName] > b[propName]) return 1
+          else return 0
+        }
+      })
+    }
   }
 
   function update(updated: ProjectList): void {
     updated.forEach((item, index) => Object.assign(item, { order: index }))
   }
 
-  function moveItem(moved: Moved) {
-    rawProjects[moved.oldIndex - 1].order = moved.newIndex
-    rawProjects.forEach((project, index) => {
-      if (index !== moved.oldIndex - 1) {
-        if (moved.oldIndex > moved.newIndex) {
-          if (project.order >= moved.newIndex) {
-            Object.assign(project, { order: project.order + 1 })
-          }
-        } else {
-          if (index !== moved.oldIndex - 1 && project.order <= moved.newIndex) {
-            Object.assign(project, { order: project.order - 1 })
-          }
-        }
-      } else {
-        Object.assign(project, { order: moved.newIndex })
-      }
-    })
+  function moveItem(arg: { moved: Moved }) {
+    const {
+      moved: { oldIndex, newIndex },
+    } = arg
 
-    updateProjects()
+    if (newIndex === oldIndex) return
+
+    rawList.splice(newIndex, 0, rawList.splice(oldIndex, 1)[0])
+    rawList.forEach((item, index) => Object.assign(item, { order: index + 1 }))
+    updateRecords()
   }
 
-  function updateField(id: number, field: string, value: string | number) {
-    const project: Project | undefined = rawProjects.find((item) => item.id === id)
+  function updateField(modified: Modified) {
+    const { id, field, value } = modified
+    const project: Project | undefined = rawList.find((item: Project) => item.id === id)
     if (project) {
-      if (field === 'date' || field === 'deadline') {
-        const data = value.toString()
-        Object.assign(project, { [field]: Date.parse(data) })
-      } else {
-        Object.assign(project, { [field]: value })
-      }
+      Object.assign(project, { [field]: value })
     }
 
-    updateProjects()
+    updateRecords()
   }
 
-  async function addNewProject() {
-    const order = Math.max(...rawProjects.map((item) => item.order)) + 1
-    const id = Math.max(...rawProjects.map((item) => item.id)) + 1
+  async function addNewRecord() {
+    const order = Math.max(...rawList.map((item) => item.order))
+    const id = Math.max(...rawList.map((item: Project) => parseInt(item.id))) + 1 + ''
     const project: Project = {
       id,
       order,
@@ -87,21 +126,32 @@ export const useProjectStore = defineStore('projects', () => {
       title: 'Unnomous Project',
       description: '...',
       status: 'new',
+      tasks: 0,
     }
     const result = await axios.post(`${api}projects`, project)
 
     if (result.status === 201) {
-      rawProjects.push(result.data)
-      updateProjects()
+      rawList.push(result.data)
+      updateRecords()
     }
   }
 
   async function saveAll() {
-    const promises = rawProjects.map((project) =>
-      axios.put(`${api}projects/${project.id}`, project),
-    )
+    const promises = rawList.map((project) => axios.put(`${api}projects/${project.id}`, project))
     await Promise.all(promises)
   }
 
-  return { projects, getProjects, moveItem, update, updateField, addNewProject, saveAll }
+  return {
+    records,
+    fetchRecords,
+    updateRecords,
+    updateTasks,
+    moveItem,
+    update,
+    updateField,
+    addNewRecord,
+    saveAll,
+    filter,
+    sort,
+  }
 })

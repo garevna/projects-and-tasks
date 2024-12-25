@@ -2,61 +2,100 @@
   "projects": [
     {
       "id": "1",
-      "order": 3,
-      "title": "Default Values",
+      "order": 4,
+      "title": "Demo for Nuxt 3",
       "description": "By default, inject assumes that the injected key is provided somewhere in the parent chain. In the case where the key is not provided, there will be a runtime warning.",
-      "date": 1733384812771,
+      "date": 1733616000000,
+      "tasks": 2,
       "status": "processing..."
     },
     {
       "id": "2",
-      "order": 4,
-      "title": "Injection keys",
+      "order": 3,
+      "title": "Story about Vue 3 Composition API",
       "description": "So far, we have been using string injection keys in the examples. If you are working in a large application with many dependency providers, or you are authoring components that are going to be used by other developers, it is best to use Symbol injection keys to avoid potential collisions.",
-      "date": 1733385412771,
+      "date": 1733011200000,
+      "tasks": 1,
       "status": "processing..."
     },
     {
       "id": "3",
       "order": 2,
-      "title": "Provide | Inject",
+      "title": "Story about Nuxt 3",
       "description": "When using reactive provide / inject values, it is recommended to keep any mutations to reactive state inside of the provider whenever possible. This ensures that the provided state and its possible mutations are co-located in the same component, making it easier to maintain in the future.",
-      "date": 1733387712771,
+      "date": 1733356800000,
+      "tasks": null,
       "status": "processing..."
     },
     {
       "id": "4",
       "order": 1,
-      "date": 1733682143863,
-      "title": "The Best Project",
-      "description": "...",
+      "date": 1734566400000,
+      "tasks": null,
+      "title": "Demo for Vue 3 Composition API",
+      "description": "The Vue v-model directive enables two-way data binding on form input elements, such as the input element, textarea element, and select element on any Vue component.\n\nIt handles data updates in two ways:\n\n• when the value of the input changes, the v-model reflects the value onto the state inside the component\n• when the state of the component changes, the v-model reflects the changes onto the form input elements",
       "status": "Started"
     }
   ],
   "tasks": [
     {
-      "projectId": 1,
-      "order": 0,
-      "date": 1733384812771,
-      "description": "",
+      "id": "1",
+      "projectId": "1",
+      "order": 1,
+      "date": 1733788800000,
+      "title": "Explanation",
+      "description": "Default Values explanation and revealing",
+      "performer": "Margaret",
+      "status": "In work",
+      "deadline": 1734480000000
+    },
+    {
+      "id": "3",
+      "projectId": "1",
+      "order": 2,
+      "date": 1733875200000,
+      "title": "Pages",
+      "description": "Create video clip about pages folder",
       "performer": "Jerry",
       "status": "In work",
       "deadline": 1734681425344
+    },
+    {
+      "id": "2",
+      "projectId": "2",
+      "order": 1,
+      "date": 1734154871988,
+      "title": "Reveal",
+      "description": "Injection keys explanation and revealing",
+      "performer": "Jerry",
+      "status": "In work",
+      "deadline": 1734681425344
+    },
+    {
+      "id": "4",
+      "projectId": "1",
+      "order": 3,
+      "date": 1735058135529,
+      "title": "SSR",
+      "description": "Create video clip about SSR",
+      "status": "Ready",
+      "deadline": 1735490135529,
+      "performer": "Robert"
     }
   ],
   "performers": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Jerry",
       "speciality": "dev"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Robert",
       "speciality": "manager"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Jeck",
       "speciality": "manager"
     }
