@@ -1,6 +1,7 @@
 // import { createResizeBars } from '@/composables/createResizeBars'
 import { getPropValue } from '@/utils/getPropValue'
 import { resizeBarsHandler } from './resizeBarsHandler'
+import { getTableOptionsFromLocalStorage } from '../getTableOptionsFromLocalStorage'
 
 let tableHeaderCells: NodeListOf<HTMLElement> | null
 
@@ -11,10 +12,9 @@ export function tableHeaderCellsHandler(table?: HTMLTableElement | null) {
 
     const id = table.id || 'table-columns-width'
 
-    const lastSaved: string | null = localStorage.getItem(id)
+    const columns = getTableOptionsFromLocalStorage(id)
 
-    if (lastSaved) {
-      const columns: object = JSON.parse(lastSaved)
+    if (columns) {
       tableHeaderCells.forEach((cell) => {
         const key = getPropValue(cell, 'innerText') as keyof typeof columns
         if (typeof key === 'string') {

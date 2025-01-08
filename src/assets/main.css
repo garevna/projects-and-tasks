@@ -4,6 +4,7 @@
   margin: 0 auto;
   padding: 16px;
   font-weight: normal;
+  font-size: 12px;
 }
 
 th {
@@ -13,9 +14,9 @@ th {
   padding: 8px 12px;
 }
 
-th::after {
+/* th::after {
   content: '▼';
-}
+} */
 
 svg {
   fill: #687;

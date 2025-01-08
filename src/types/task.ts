@@ -1,3 +1,5 @@
+import type { TaskStatus } from './task-status'
+
 export interface Task {
   id: string
   projectId: string
@@ -6,6 +8,6 @@ export interface Task {
   order: number
   title: string
   description: string
-  status: string
-  performer: string
+  status: TaskStatus
+  performerId: string
 }

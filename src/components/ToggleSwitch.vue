@@ -79,7 +79,8 @@ const model = defineModel({ default: 'Drag' })
 #switch-button .knobs:before {
   content: '';
   left: 0;
-  height: 32px;
+  top: 0;
+  height: 36px;
   width: 68px;
   background-color: var(--vt-c-green);
 }

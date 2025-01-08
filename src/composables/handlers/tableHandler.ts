@@ -1,14 +1,19 @@
 import { beforeUnmount } from '@/utils/resize-directive'
 import { updateResizeBars } from '../updateResizeBars'
 import { dragStartHandler } from './dragStartHandler'
+import { tableHeaderCellsHandler } from './tableHeaderCellsHandler'
 
 let table: HTMLTableElement | null | undefined = null
 
 const config = { attributes: true, childList: true, subtree: true }
 
 const mutationObserverCallback = (mutationList: MutationRecord[]) => {
-  const tableMutation = mutationList.find((mutation) => mutation.target instanceof HTMLTableElement)
-  if (!tableMutation) return
+  const tableChanged: HTMLTableElement | null | undefined = mutationList.find(
+    (mutation) => mutation.type === 'attributes' && mutation.attributeName === 'id',
+  )?.target as HTMLTableElement
+  if (tableChanged) {
+    tableHeaderCellsHandler(table)
+  }
 
   if (!dragStartHandler()) updateResizeBars()
 }

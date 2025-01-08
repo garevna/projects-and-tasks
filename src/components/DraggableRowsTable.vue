@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { onBeforeUnmount, useTemplateRef, computed } from 'vue'
+import { onBeforeUnmount, useTemplateRef, computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
-import { getFieldValue } from '@/utils/getFieldValue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import type { Project, Task, ProjectHeader, TaskHeader, Modified } from '@/types'
+import ProjectTaskInfo from './ProjectTaskInfo.vue'
+import SelectPerformer from './SelectPerformer.vue'
+import IconSet from './IconSet.vue'
 
 import EditField from './EditField.vue'
 
 const props = defineProps({
-  mode: {
-    type: String,
-    default: 'Drag',
-  },
   items: Array<Project | Task>,
   headers: Array<ProjectHeader | TaskHeader>,
   moveCallback: {
@@ -24,6 +22,8 @@ const props = defineProps({
   },
   tableId: String,
 })
+
+const modified: Ref<{ id: string; field: string } | null> = ref(null)
 
 const projectId = defineModel('projectId', { type: String, default: '' })
 const projectTitle = defineModel('projectTitle', { type: String, default: '' })
@@ -50,6 +50,14 @@ onBeforeUnmount(() => {
   const table = useTemplateRef('draggable-and-resizable-table') as Ref<HTMLTableElement>
   table.value?.dispatchEvent(new Event('before-unmount'))
 })
+
+function editClick(record: Project | Task, field: keyof typeof record) {
+  if (modified.value?.id === record.id) {
+    modified.value = null
+  } else {
+    modified.value = { id: record.id, field }
+  }
+}
 </script>
 
 <template>
@@ -63,7 +71,6 @@ onBeforeUnmount(() => {
         </tr>
       </thead>
       <VueDraggableNext
-        v-if="props.mode === 'Drag'"
         v-model="list"
         tag="tbody"
         item-key="order"
@@ -75,30 +82,42 @@ onBeforeUnmount(() => {
             v-for="header of props.headers"
             :key="header.order"
             :style="{ textAlign: header.align || 'left' }"
+            :class="header.type"
           >
-            {{ getFieldValue(element, header.field as keyof typeof element) }}
+            <IconSet
+              v-if="header.type === 'text' || header.type === 'string'"
+              :icon-name="
+                element.id === modified?.id && header.field === modified?.field ? 'submit' : 'edit'
+              "
+              :icon-size="24"
+              style="position: absolute; top: 0; right: 0"
+              @click="editClick(element, header.field as keyof typeof element)"
+            />
+            <ProjectTaskInfo
+              v-if="header.type === 'tasks'"
+              :projectId="element.id"
+              @click="updateModel(element as Project)"
+            />
+            <SelectPerformer v-if="header.type === 'avatar'" :task="element" />
+            <EditField
+              v-else
+              :element="element"
+              :edit="element.id === modified?.id && header.field === modified?.field"
+              :header="header"
+              @update="update"
+            />
           </td>
         </tr>
       </VueDraggableNext>
-      <tbody v-else class="edit">
-        <tr v-for="(element, index) in items" :key="index">
-          <td v-for="header of props.headers" :key="header.order">
-            <button
-              v-if="header.type === 'action'"
-              @click="updateModel(element as Project)"
-              v-tooltip="{ text: 'Show project tasks' }"
-            >
-              <img src="@/assets/table-edit.svg" width="32" height="32" />
-            </button>
-            <EditField v-else :element="element" :header="header" @update="update" />
-          </td>
-        </tr>
-      </tbody>
     </table>
   </div>
 </template>
 
 <style scoped>
+img {
+  border-radius: 50%;
+  border: solid 1px #ddd;
+}
 table {
   margin: 16px auto;
   max-width: 100%;
@@ -108,6 +127,26 @@ tbody.drag {
 }
 .not-drag {
   user-select: none;
+}
+
+td.date {
+  padding: 0 !important;
+  text-align: center;
+}
+
+td.text,
+td.string {
+  position: relative;
+  padding: 4px 24px 4px 4px !important;
+}
+
+.behind-schedule {
+  color: var(--vt-c-error);
+  /* background: var(--vt-c-error-opacity); */
+}
+.must-be-finished-today {
+  color: var(--vt-c-orange);
+  /* background: var(--vt-c-orange-opacity); */
 }
 table th,
 td {

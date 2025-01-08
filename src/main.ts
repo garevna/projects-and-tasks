@@ -6,10 +6,9 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 
-import { resizeDirectiveCallback } from './utils/resize-directive-callback'
-import { tooltipDirective } from './utils/tooltip-directive'
+import { resizeDirectiveCallback, tooltipDirective } from './utils'
 
-// const key = Symbol('api') as InjectionKey<string>
+import { testDBVersion } from './db/initDB'
 
 const app = createApp(App)
 app.directive('tooltip', tooltipDirective)
@@ -20,8 +19,12 @@ app.directive('columns-resizable', {
   },
 })
 
+// const injectionKey = Symbol.for('app-data-access-mode') as InjectionKey<string>
+
 app.config.globalProperties.$backendAPI = 'http://localhost:3000/'
-// app.provide(key, 'http://localhost:3000/')
+// app.provide(injectionKey, 'local')
+
+testDBVersion()
 
 app.use(createPinia())
 

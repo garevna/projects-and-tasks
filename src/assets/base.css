@@ -78,21 +78,31 @@
   --vt-c-green-soft: #bcc;
   --vt-c-green: #576;
   --vt-c-green-dark: #354;
-  --vt-c-green-light-opacity: #6879;
+  --vt-c-green-light-opacity: #6875;
   --vt-c-green-opacity: #5768;
   --vt-c-green-dark-opacity: #3547;
 
   --vt-c-orange-light: #fa0;
+  --vt-c-orange-light-opacity: #fa05;
   --vt-c-orange: #f50;
+  --vt-c-orange-opacity: #f505;
   --vt-c-orange-dark: #940;
+  --vt-c-orange-dark-opacity: #9405;
+
+  --vt-c-error: #c00;
+  --vt-c-error-opacity: #f005;
 
   --dp-font-family: Montserrat, 'Segoe UI', roboto, oxygen, ubuntu, cantarell, 'Open Sans',
     'Helvetica Neue', sans-serif;
-  --dp-font-size: 14px;
+  --dp-font-size: 12px;
   --dp-cell-size: 36px;
   --dp-cell-padding: 4px;
   --dp-common-padding: 12px;
   --dp-icon-color: var(--vt-c-green-dark);
+
+  --avatar-width: 64px;
+  --avatar-width-large: 80px;
+  --avatar-width-small: 48px;
 }
 
 /* semantic color variables for this project */

@@ -1,6 +1,9 @@
 import type { Project } from '@/types/project'
 
-type HeaderField = keyof Project
+type ExcludedKeys = 'id'
+type HeaderField = Exclude<keyof Project, ExcludedKeys>
+
+// type HeaderField = keyof Project
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -10,5 +13,7 @@ export interface ProjectHeader {
   type: string
   action?: any
   align?: 'center' | 'left' | 'right' | 'justify'
-  field: HeaderField
+  width: number
+  field: HeaderField | 'tasks'
+  edit?: boolean
 }

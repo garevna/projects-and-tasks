@@ -1,16 +1,16 @@
-import type { Ref } from 'vue'
+import type { /* Ref, */ Directive, DirectiveBinding } from 'vue'
 
-type Binding = {
-  text: string
-  background: string | null
-  color: string | null
-  border: string | null
-}
+// type Binding = {
+//   text: string
+//   background: string | null
+//   color: string | null
+//   border: string | null
+// }
 
 function onMouseEnter(tooltip: HTMLDivElement, event: MouseEvent) {
   const elem = event.target as HTMLElement
   const rect = elem.getBoundingClientRect()
-  const left = rect.left - elem.offsetWidth + window.scrollX - 8
+  const left = rect.left - rect.width + window.scrollX - 8
 
   Object.assign(tooltip.style, {
     position: 'absolute',
@@ -25,8 +25,8 @@ function onMouseLeave(tooltip: HTMLDivElement) {
   Object.assign(tooltip.style, { display: 'none' })
 }
 
-export const tooltipDirective = {
-  beforeMount(el: HTMLElement, binding: Ref<Binding>) {
+export const tooltipDirective: Directive<HTMLDivElement> = {
+  beforeMount(el: HTMLElement, binding: DirectiveBinding) {
     const tooltip: HTMLDivElement = document.body.appendChild(document.createElement('div'))
     const { background = '#ddd', color = '#555', border = '1px solid #bbb' } = binding.value
     tooltip.innerText = binding.value.text
@@ -35,7 +35,7 @@ export const tooltipDirective = {
       color,
       border,
       padding: '4px 8px',
-      fontSize: '14px',
+      fontSize: '12px',
       display: 'none',
     })
 

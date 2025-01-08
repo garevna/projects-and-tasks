@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ToggleSwitch from './ToggleSwitch.vue'
+// import ToggleSwitch from './ToggleSwitch.vue'
 import IconSet from './IconSet.vue'
 
 import { useProjectStore, useTaskStore } from '@/stores'
@@ -21,15 +21,16 @@ const projectTitle = ref('')
 const projectStore = useProjectStore()
 const taskStore = useTaskStore()
 
-watch(projectId, (newVal: string, oldVal: string) => {
-  console.log(newVal, oldVal)
+watch(projectId, (newVal: string) => {
   if (!newVal) {
-    route.value = 'Project'
+    backToProjects()
   } else {
     route.value = 'Task'
-    taskStore.updateProjectId(newVal)
+    taskStore.getTasksByProject(newVal)
+    localStorage.setItem('project-id', newVal)
+    localStorage.setItem('project-title', projectTitle.value)
   }
-  mode.value = 'Drag'
+  // mode.value = 'Drag'
 })
 
 const moveCallback = computed(
@@ -76,16 +77,15 @@ function create() {
   if (route.value === 'Project') {
     projectStore.addNewRecord()
   } else if (route.value === 'Task' && projectId.value) {
-    console.log(projectId.value)
     taskStore.addNewRecord(projectId.value)
   }
 }
 
-const mode = ref('Drag')
+// const mode = ref('Drag')
 
-function switchMode() {
-  mode.value = mode.value === 'Drag' ? 'Edit' : 'Drag'
-}
+// function switchMode() {
+//   mode.value = mode.value === 'Drag' ? 'Edit' : 'Drag'
+// }
 
 onBeforeMount(() => {
   const tmp = localStorage.getItem('route')
@@ -99,18 +99,30 @@ onBeforeMount(() => {
     }
   }
 })
+
+function backToProjects() {
+  projectId.value = ''
+  projectTitle.value = ''
+  localStorage.removeItem('project-id')
+  localStorage.removeItem('project-title')
+  route.value = 'Project'
+}
 </script>
 
 <template>
   <h3 v-if="projectId">
-    <IconSet iconName="return" :iconSize="32" v-tooltip="{ text: 'Back to projects' }" />
+    <IconSet
+      iconName="return"
+      :iconSize="32"
+      v-tooltip="{ text: 'Back to projects' }"
+      @click="backToProjects"
+    />
     {{ projectTitle }}
   </h3>
   <div class="flex-caption">
-    <ToggleSwitch v-model="mode" @click="switchMode" />
+    <!-- <ToggleSwitch v-model="mode" @click="switchMode" /> -->
     <div>
       <button
-        v-if="mode === 'Edit'"
         @click="create"
         class="add-new-record"
         v-tooltip="{ text: 'Create new one' }"
@@ -123,7 +135,6 @@ onBeforeMount(() => {
     </div>
   </div>
   <DraggableRowsTable
-    :mode="mode"
     v-model:project-id="projectId"
     v-model:project-title="projectTitle"
     :items="computedItems"
