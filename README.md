@@ -47,15 +47,17 @@ Now you are ready to run the demo version of the application. To do this, just c
 
 ## [![favicon-32x32](https://github.com/user-attachments/assets/de2ad0e6-d8db-466b-aef6-bc3ee7fc378e) Demo](https://garevna.github.io/projects-and-tasks/)
 
+---
+
 ## Usage
 
 ### Buttons, tooltips and menu
 
-[task-manager-01.webm](https://github.com/user-attachments/assets/cd61473e-82bc-4748-91f5-ac87c2d18bc6)
+https://github.com/user-attachments/assets/b83c128c-c05c-4cf4-bd5c-fafb6d0b24e0
 
 ### Resize columns and drag rows
 
-[task-manager-02.webm](https://github.com/user-attachments/assets/4fecb545-8811-44f8-a782-58b0dcf1a77b)
+https://github.com/user-attachments/assets/d2638d20-b4dd-41f2-a8cc-28d58abd46a8
 
 ### Edit
 
