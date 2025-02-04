@@ -1,9 +1,7 @@
 import type { Project } from '@/types/project'
 
-type ExcludedKeys = 'id'
+type ExcludedKeys = 'id, chain, order'
 type HeaderField = Exclude<keyof Project, ExcludedKeys>
-
-// type HeaderField = keyof Project
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

@@ -1,52 +1,66 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { ComputedRef } from 'vue'
+import { computed } from 'vue'
 const props = defineProps({
   header: String,
   text: String,
   yes: {
     type: Boolean,
-    default: false
+    default: false,
   },
   confirm: {
     type: Boolean,
-    default: false
+    default: false,
   },
   ok: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const buttonsOptions = {
-  yesNoButtons: [{ returnValue: true, text: 'Yes' }, { returnValue: false, text: 'No' }],
-  confirmCancelButtons: [{ returnValue: true, text: 'Confirm' }, { returnValue: false, text: 'Cancel' }],
-  okButton: [{ returnValue: true, text: 'OK' }]
+  yesNoButtons: [
+    { returnValue: true, text: 'Yes' },
+    { returnValue: false, text: 'No' },
+  ],
+  confirmCancelButtons: [
+    { returnValue: true, text: 'Confirm' },
+    { returnValue: false, text: 'Cancel' },
+  ],
+  okButton: [{ returnValue: true, text: 'OK' }],
 }
 
 type ButtonsGroup = ComputedRef<keyof typeof buttonsOptions>
 
-const buttonsGroup: ButtonsGroup = computed(() => props.ok ? 'okButton' : props.yes ? 'yesNoButtons' : 'confirmCancelButtons') as ButtonsGroup
+const buttonsGroup: ButtonsGroup = computed(() =>
+  props.ok ? 'okButton' : props.yes ? 'yesNoButtons' : 'confirmCancelButtons',
+) as ButtonsGroup
 
 const buttons = computed(() => buttonsOptions[buttonsGroup.value])
 
 const open = defineModel('open')
 const response = defineModel('response')
 
-function updateReurnValue(val: boolean) {
+function updateReturnValue(val: boolean) {
   response.value = val
   open.value = false
 }
 </script>
 
 <template>
-  <div>
+  <div v-if="open">
     <div class="shadow-win"></div>
     <div class="popup-win">
       <h3>{{ props.header }}</h3>
       <p>{{ props.text }}</p>
       <div class="actions">
-        <button v-for="(button, index) in buttons" :key="index" @click="updateReurnValue(button.returnValue)">{{ button.text }}</button>
+        <button
+          v-for="(button, index) in buttons"
+          :key="index"
+          @click="updateReturnValue(button.returnValue)"
+        >
+          {{ button.text }}
+        </button>
       </div>
     </div>
   </div>

@@ -13,7 +13,6 @@ export async function getRecord(
     const request: IDBRequest = store.get(recordId)
     Object.assign(request, {
       onsuccess: () => {
-        console.log(request.result)
         resolve({
           data: request.result,
           error: request.result

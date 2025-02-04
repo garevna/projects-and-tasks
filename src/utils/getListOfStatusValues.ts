@@ -1,21 +1,17 @@
-import { getListOfProjectStatusValues } from './getListOfProjectStatusValues'
-import { getListOfTaskStatusValues } from './getListOfTaskStatusValues'
-import type { Project, Task } from '@/types'
-import { ProjectStatusValues, TaskStatusValues } from '@/configs'
+import { PerformerStatusValues, ProjectStatusValues, TaskStatusValues } from '@/configs'
+import { statusValuesGenerator } from './statusValuesGenerator'
 
-const projectStatusList = getListOfProjectStatusValues()
-const taskStatusList = getListOfTaskStatusValues()
-
-export function getListOfStatusValues(
-  record: Project | Task,
-): ProjectStatusValues[] | TaskStatusValues[] | [] {
-  if (record as Task) {
-    return taskStatusList
-  } else {
-    if (record as Project) {
-      return projectStatusList
-    } else {
-      return []
-    }
-  }
+export function getListOfStatusValues(route: 'Project' | 'Task' | 'Performer') {
+  const sourceData =
+    route === 'Project'
+      ? ProjectStatusValues
+      : route === 'Task'
+        ? TaskStatusValues
+        : route === 'Performer'
+          ? PerformerStatusValues
+          : null
+  if (sourceData) {
+    const iterator = statusValuesGenerator(sourceData)
+    return [...iterator]
+  } else return null
 }

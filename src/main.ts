@@ -6,12 +6,13 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 
-import { resizeDirectiveCallback, tooltipDirective } from './utils'
+import { clickOutsideDirective, resizeDirectiveCallback, tooltipDirective } from './utils'
 
 import { testDBVersion } from './db/initDB'
 
 const app = createApp(App)
 app.directive('tooltip', tooltipDirective)
+app.directive('click-outside', clickOutsideDirective)
 
 app.directive('columns-resizable', {
   mounted(el) {

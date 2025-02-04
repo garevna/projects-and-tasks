@@ -1,11 +1,6 @@
-import type { /* Ref, */ Directive, DirectiveBinding } from 'vue'
+import type { Directive, DirectiveBinding } from 'vue'
 
-// type Binding = {
-//   text: string
-//   background: string | null
-//   color: string | null
-//   border: string | null
-// }
+const tooltip: HTMLDivElement = document.body.appendChild(document.createElement('div'))
 
 function onMouseEnter(tooltip: HTMLDivElement, event: MouseEvent) {
   const elem = event.target as HTMLElement
@@ -19,6 +14,8 @@ function onMouseEnter(tooltip: HTMLDivElement, event: MouseEvent) {
     top: `${rect.bottom + window.scrollY}px`,
     display: 'block',
   })
+
+  tooltip.innerText = elem.ariaDescription as string
 }
 
 function onMouseLeave(tooltip: HTMLDivElement) {
@@ -27,9 +24,8 @@ function onMouseLeave(tooltip: HTMLDivElement) {
 
 export const tooltipDirective: Directive<HTMLDivElement> = {
   beforeMount(el: HTMLElement, binding: DirectiveBinding) {
-    const tooltip: HTMLDivElement = document.body.appendChild(document.createElement('div'))
+    el.ariaDescription = binding.value.text
     const { background = '#ddd', color = '#555', border = '1px solid #bbb' } = binding.value
-    tooltip.innerText = binding.value.text
     Object.assign(tooltip.style, {
       background,
       color,
@@ -46,7 +42,7 @@ export const tooltipDirective: Directive<HTMLDivElement> = {
     })
   },
 
-  beforeUnmount(tooltip: HTMLDivElement) {
-    tooltip.remove()
+  updated(el: HTMLElement, binding: DirectiveBinding) {
+    el.ariaDescription = binding.value.text
   },
 }

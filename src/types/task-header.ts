@@ -1,6 +1,6 @@
 import type { Task } from '@/types/task'
 
-type ExcludedKeys = 'projectId'
+type ExcludedKeys = 'projectId, order, chain, state'
 type HeaderField = Exclude<keyof Task, ExcludedKeys>
 
 export interface TaskHeader {

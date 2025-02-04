@@ -6,15 +6,15 @@ export const demo = `{
       "title": "Provisioning Portal",
       "description": "Portal for parners (resellers) and dashboard for admins with different roles and access rights.",
       "date": 1733546600000,
-      "status": "in process"
+      "status": "in-process"
     },
     {
       "id": "1733635562187",
       "order": 2,
-      "title": "Nuxt 3",
-      "description": "Technical documentation, user guide and demo videos.",
+      "title": "CMS for landing pages",
+      "description": "Functionnality:\\n1. Create new landing page\\n2. Config the structure of landing page\\n3. Edit the content of landing page (images, texts)\\n4.Config the feedback form fields (type of field, available input values, validation, etc.)\\n5. Setup the landing page visibility for customers",
       "date": 1733011200000,
-      "status": "in process"
+      "status": "in-process"
     },
     {
       "id": "1733722142521",
@@ -22,7 +22,7 @@ export const demo = `{
       "title": "Vue 3 Composition API",
       "description": "Technical documentation, user guide and demo videos.",
       "date": 1733011200000,
-      "status": "in process"
+      "status": "in-process"
     },
     {
       "id": "1733808606011",
@@ -30,15 +30,15 @@ export const demo = `{
       "title": "Portal for Human Research",
       "description": "A portal for international organisations involved in human potential research under the auspices of the United Nations.",
       "date": 1733356800000,
-      "status": "in process"
+      "status": "in-process"
     },
     {
       "id": "1733981576185",
       "order": 4,
       "date": 1734566400000,
-      "title": "Additions to the development team",
-      "description": "Searching for new employees in accordance with the requirements of team leaders.",
-      "status": "in process"
+      "title": "Expanding the development team",
+      "description": "Hire new developers for the front-end team in accordance with the requirements of team leader.",
+      "status": "in-process"
     }
   ],
   "tasks": [
@@ -50,7 +50,7 @@ export const demo = `{
       "title": "Explanation",
       "description": "Default Values explanation and revealing",
       "performerId": "1745917907058",
-      "status": "in process",
+      "status": "in-process",
       "deadline": 1734480000000
     },
     {
@@ -61,7 +61,7 @@ export const demo = `{
       "title": "Pages",
       "description": "Create video clip about pages folder",
       "performerId": "1785917905077",
-      "status": "in process",
+      "status": "in-process",
       "deadline": 1734681400000
     },
     {
@@ -72,7 +72,7 @@ export const demo = `{
       "title": "Reveal",
       "description": "Injection keys explanation and revealing",
       "performerId": "1785917905077",
-      "status": "in process",
+      "status": "in-process",
       "deadline": 1734681400000
     },
     {
@@ -93,7 +93,7 @@ export const demo = `{
       "date": 1735149700000,
       "title": "Create new group",
       "description": "Hiring developers to build the group for new project",
-      "status": "suspended",
+      "status": "canceled",
       "deadline": 1735149700000,
       "performerId": "1785917905077"
     },
@@ -104,7 +104,7 @@ export const demo = `{
       "date": 1735917600000,
       "title": "Schedule",
       "description": "Create schedule for customers",
-      "status": "not started yet",
+      "status": "not-started-yet",
       "deadline": 1736349600000,
       "performerId": "1745917904058"
     }

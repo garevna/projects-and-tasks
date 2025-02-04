@@ -1,49 +1,44 @@
 <script setup lang="ts">
-import { onBeforeUnmount, useTemplateRef, computed, ref } from 'vue'
-import type { PropType, Ref } from 'vue'
+import { getHeaders, getStore, injectionKeyForCurrent, injectionKeyForNext } from '@/composables'
+import type { GoTo, Modified, Moved, Performer, Project, Record, Route } from '@/types'
+
+import type { Reactive, Ref } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, useTemplateRef } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import type { Project, Task, ProjectHeader, TaskHeader, Modified } from '@/types'
-import ProjectTaskInfo from './ProjectTaskInfo.vue'
-import SelectPerformer from './SelectPerformer.vue'
+import AlertIcon from './AlertIcon.vue'
 import IconSet from './IconSet.vue'
+import SelectPerformer from './SelectPerformer.vue'
+import SelectSimpleValue from './SelectSimpleValue.vue'
+import TaskInfo from './TaskInfo.vue'
 
 import EditField from './EditField.vue'
+import ImageField from './ImageField.vue'
 
-const props = defineProps({
-  items: Array<Project | Task>,
-  headers: Array<ProjectHeader | TaskHeader>,
-  moveCallback: {
-    type: Function as PropType<(arg: Modified) => void>,
-    required: true,
-  },
-  modifyCallback: {
-    type: Function as PropType<(arg: Modified) => void>,
-    required: true,
-  },
-  tableId: String,
-})
+const current = inject(injectionKeyForCurrent) as Reactive<GoTo>
+const next = inject(injectionKeyForNext) as Reactive<GoTo>
+const store = computed(() => getStore(current.route))
+
+const tableId = computed(() => current.route.toLowerCase() + '-table')
+
+const headers = computed(() => getHeaders(current.route as Route))
+const statusValues = computed(() => store.value.statusValues)
+
+function moveCallback(arg: { moved: Moved }): void {
+  getStore(current.route).moveItem(arg, current.subroute)
+}
 
 const modified: Ref<{ id: string; field: string } | null> = ref(null)
 
-const projectId = defineModel('projectId', { type: String, default: '' })
-const projectTitle = defineModel('projectTitle', { type: String, default: '' })
-
-function updateModel(record: Project) {
-  projectId.value = record?.id || ''
-  projectTitle.value = record?.title || ''
+function changeSubroute(record: Project | Performer) {
+  const [caption, subroute] =
+    current.route === 'Project'
+      ? [(record as Project).title, `?projectId=${record.id}`]
+      : [(record as Performer).name, `?performerId=${record.id}`]
+  Object.assign(next, { route: 'Task', subroute, caption })
 }
 
-const list = computed({
-  get() {
-    return props.items?.map((item) => item)
-  },
-  set(/* data */) {
-    // console.log(data)
-  },
-})
-
-function update(modified: { id: string; field: string; value: string | number }) {
-  props.modifyCallback(modified)
+function update(modified: Modified) {
+  store.value.updateField(current.subroute, modified)
 }
 
 onBeforeUnmount(() => {
@@ -51,7 +46,7 @@ onBeforeUnmount(() => {
   table.value?.dispatchEvent(new Event('before-unmount'))
 })
 
-function editClick(record: Project | Task, field: keyof typeof record) {
+function editClick(record: Record, field: string) {
   if (modified.value?.id === record.id) {
     modified.value = null
   } else {
@@ -65,47 +60,70 @@ function editClick(record: Project | Task, field: keyof typeof record) {
     <table v-columns-resizable ref="draggable-and-resizable-table" :id="tableId">
       <thead>
         <tr class="not-drag">
-          <th v-for="header of props.headers" :key="header.order">
+          <th v-for="header of headers" :key="header.order">
             {{ header.title }}
           </th>
         </tr>
       </thead>
       <VueDraggableNext
-        v-model="list"
+        v-model="store.records"
         tag="tbody"
         item-key="order"
-        @change="props.moveCallback"
+        @change="moveCallback"
         class="drag"
+        :disabled="modified"
       >
-        <tr v-for="(element, index) in items" :key="index">
+        <tr v-for="element in store.records" :key="element.id">
           <td
-            v-for="header of props.headers"
+            v-for="header of headers"
             :key="header.order"
             :style="{ textAlign: header.align || 'left' }"
             :class="header.type"
           >
-            <IconSet
-              v-if="header.type === 'text' || header.type === 'string'"
-              :icon-name="
-                element.id === modified?.id && header.field === modified?.field ? 'submit' : 'edit'
-              "
-              :icon-size="24"
-              style="position: absolute; top: 0; right: 0"
-              @click="editClick(element, header.field as keyof typeof element)"
-            />
-            <ProjectTaskInfo
-              v-if="header.type === 'tasks'"
-              :projectId="element.id"
-              @click="updateModel(element as Project)"
-            />
-            <SelectPerformer v-if="header.type === 'avatar'" :task="element" />
-            <EditField
-              v-else
-              :element="element"
-              :edit="element.id === modified?.id && header.field === modified?.field"
-              :header="header"
-              @update="update"
-            />
+            <template v-if="current.route === 'Task'">
+              <AlertIcon :record="element" :header="header" />
+            </template>
+
+            <template v-if="header.type === 'text' || header.type === 'string'">
+              <IconSet
+                :icon-name="
+                  element.id === modified?.id && header.field === modified?.field
+                    ? 'submit'
+                    : 'edit'
+                "
+                :icon-size="24"
+                style="position: absolute; top: 0; right: 0"
+                @click="editClick(element, header.field)"
+              />
+            </template>
+
+            <template v-if="header.type === 'tasks'">
+              <TaskInfo
+                :recordId="element.id"
+                @click="changeSubroute(element as Project | Performer)"
+              />
+            </template>
+
+            <template v-if="header.type === 'avatar'">
+              <SelectPerformer :subroute="current.subroute" :task="element" />
+            </template>
+
+            <template v-if="header.type === 'image'">
+              <ImageField :record="element" :field="header.field" />
+            </template>
+
+            <template v-if="header.field === 'status'">
+              <SelectSimpleValue :options="statusValues" v-model="element.status" />
+            </template>
+
+            <template v-if="['date', 'string', 'text'].includes(header.type)">
+              <EditField
+                :record="element"
+                :edit="element.id === modified?.id && header.field === modified?.field"
+                :header="header"
+                @update="update"
+              />
+            </template>
           </td>
         </tr>
       </VueDraggableNext>
@@ -132,7 +150,21 @@ tbody.drag {
 td.date {
   padding: 0 !important;
   text-align: center;
+  position: relative;
 }
+
+td.status {
+  position: relative;
+}
+
+/* td.date::after {
+  content: '⚠';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #f00;
+  font-size: 18px;
+} */
 
 td.text,
 td.string {
@@ -140,7 +172,7 @@ td.string {
   padding: 4px 24px 4px 4px !important;
 }
 
-.behind-schedule {
+.behind-schedule .dp__input {
   color: var(--vt-c-error);
   /* background: var(--vt-c-error-opacity); */
 }

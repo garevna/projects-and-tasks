@@ -1,10 +1,17 @@
 @import './base.css';
 
 #app {
-  margin: 0 auto;
-  padding: 16px;
+  margin: 0 auto 48px;
+  padding: 0 0 16px;
   font-weight: normal;
   font-size: 12px;
+  width: 100vw;
+  max-width: 960px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 th {
@@ -13,10 +20,6 @@ th {
   vertical-align: middle;
   padding: 8px 12px;
 }
-
-/* th::after {
-  content: '▼';
-} */
 
 svg {
   fill: #687;

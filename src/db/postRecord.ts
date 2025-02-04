@@ -25,7 +25,6 @@ export async function postRecord<T>(storeName: string, payload: T): Promise<Resp
       })
     } else {
       const request: IDBRequest = store.put(record)
-      console.log(request)
       Object.assign(request, {
         onsuccess: () => {
           resolve({ data: request.result, error: null })

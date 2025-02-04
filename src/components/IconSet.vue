@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { computed, reactive, onMounted, onUpdated } from 'vue'
+import { computed, onMounted, onUpdated, reactive } from 'vue'
 
 const icons = reactive({
+  error:
+    '<path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />',
+  'date-error':
+    '<path d="M6 1V3H5C3.89 3 3 3.89 3 5V19C3 20.11 3.9 21 5 21H19C20.11 21 21 20.11 21 19V5C21 3.9 20.11 3 19 3H18V1H16V3H8V1H6M5 8H19V19H5V8M11 9V14H13V9H11M11 16V18H13V16H11Z" />',
+  warning: '<path d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z" />',
   date: '<path d="M9,10H7V12H9V10M13,10H11V12H13V10M17,10H15V12H17V10M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V8H19V19Z" />',
   edit: '<path d="M19,3A2,2 0 0,1 21,5V19C21,20.11 20.1,21 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M16.7,9.35C16.92,9.14 16.92,8.79 16.7,8.58L15.42,7.3C15.21,7.08 14.86,7.08 14.65,7.3L13.65,8.3L15.7,10.35L16.7,9.35M7,14.94V17H9.06L15.12,10.94L13.06,8.88L7,14.94Z" />',
   add: '<path d="M13 19C13 19.34 13.04 19.67 13.09 20H4C2.9 20 2 19.11 2 18V6C2 4.89 2.89 4 4 4H10L12 6H20C21.1 6 22 6.89 22 8V13.81C21.12 13.3 20.1 13 19 13C15.69 13 13 15.69 13 19M20 18V15H18V18H15V20H18V23H20V20H23V18H20Z" />',
@@ -25,6 +30,10 @@ const props = defineProps({
     type: Number,
     default: 32,
   },
+  iconColor: {
+    type: String,
+    default: '#687',
+  },
 })
 
 const dynamicPath = computed(() => {
@@ -37,6 +46,7 @@ function setPath() {
   const svg = document.getElementById(id)
   if (svg && svg instanceof SVGElement) {
     svg.innerHTML = dynamicPath.value
+    svg.style.fill = props.iconColor
   }
 }
 
@@ -50,12 +60,11 @@ onUpdated(() => setPath())
 
 <style scoped>
 svg {
-  fill: #687;
   vertical-align: middle;
   margin: 0 4px;
   cursor: pointer;
 }
 svg:hover {
-  fill: #597;
+  filter: brightness(0.8);
 }
 </style>

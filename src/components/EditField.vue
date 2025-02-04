@@ -1,10 +1,9 @@
 <script setup lang="ts">
+import type { Header, Record } from '@/types'
+import { dateToNumber, dateToString, getFieldValue } from '@/utils'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { ref, computed } from 'vue'
-import type { Project, Task, ProjectHeader, TaskHeader, TaskStatus } from '@/types'
-import { getFieldValue, getListOfStatusValues } from '@/utils'
-import SelectSimpleValue from './SelectSimpleValue.vue'
+import { computed, watch } from 'vue'
 
 const emit = defineEmits<{
   (e: 'update', payload: { id: string; field: string; value: string | number }): void
@@ -13,83 +12,85 @@ const emit = defineEmits<{
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface Props {
-  element: Project | Task
-  header: ProjectHeader | TaskHeader
+  record: Record
+  header: Header
   edit: boolean
 }
 
 const props = defineProps<Props>()
 
-const items = getListOfStatusValues(props.element)
-
-const text = ref('')
-
-const selected = computed({
-  get: () => props.element.status,
-  set: (data) => Object.assign(props.element as Task, { status: data as TaskStatus }),
+const content = computed({
+  get: () => {
+    const value = getFieldValue(
+      props.record,
+      props.header.field as keyof typeof props.record,
+      props.header.type,
+    )
+    return props.header.type !== 'text'
+      ? value
+      : props.edit
+        ? value.split('<br>').join('\n')
+        : value.split('\n').join('<br>')
+  },
+  set: (newVal: string) =>
+    emit('update', { id: props.record.id, field: props.header.field, value: newVal }),
 })
 
-if (props.header.type !== 'tasks') {
-  text.value = getFieldValue(props.element, props.header.field as keyof typeof props.element)
-}
-
 function onInput($event: any): void {
-  emit('update', { id: props.element.id, field: props.header.field, value: $event.target.value })
+  Object.assign(props.record, {
+    [props.header.field]: $event.target.value,
+  })
+  emit('update', { id: props.record.id, field: props.header.field, value: $event.target.value })
 }
 
 function dateClicked(date: any) {
-  emit('update', { id: props.element.id, field: props.header.field, value: Date.parse(date) })
+  Object.assign(props.record, { [props.header.field]: dateToNumber(date) })
+  emit('update', { id: props.record.id, field: props.header.field, value: dateToNumber(date) })
 }
 
-function format(date: Date) {
-  return date.toISOString().slice(0, 10)
-}
+const state = computed(() =>
+  props.record.status === 'finished'
+    ? 'finished'
+    : 'state' in props.record
+      ? getFieldValue(props.record, 'state')
+      : '',
+)
 
-const editable = computed(() => props.header.type === 'text' || props.header.type === 'string')
+watch(state, (newVal, oldVal) => console.log(newVal, oldVal))
 </script>
 
 <template>
-  <div v-if="props.header.type === 'not-editable'" style="text-align: center">
-    {{ text }}
-  </div>
-  <div v-if="props.header.type === 'date'">
+  <template v-if="props.header.type === 'not-editable'">
+    <div style="text-align: center">{{ content }}</div>
+  </template>
+
+  <template v-if="props.header.type === 'date'">
     <VueDatePicker
-      v-model="text"
+      v-model="content"
       @date-update="dateClicked"
-      :format="format"
+      :format="dateToString"
       :clearable="false"
       auto-apply
-      class="date-picker-class"
     />
-  </div>
+  </template>
 
-  <div v-if="!editable && props.header.field === 'status'">
-    <SelectSimpleValue :options="items" v-model="selected" />
-  </div>
+  <template v-if="props.header.type === 'text' || props.header.type === 'string'">
+    <template v-if="props.edit">
+      <template v-if="props.header.type === 'text'">
+        <textarea v-model="content" @input="onInput"></textarea>
+      </template>
 
-  <div v-if="editable">
-    <div v-if="props.edit">
-      <div v-if="props.header.type === 'text'">
-        <textarea v-model="text" @input="onInput"></textarea>
-      </div>
-
-      <div v-if="props.header.type === 'string'">
-        <input v-model="text" @input="onInput" type="text" />
-      </div>
-    </div>
-    <div v-else>
-      {{ text }}
-    </div>
-  </div>
+      <template v-if="props.header.type === 'string'">
+        <input v-model="content" @input="onInput" type="text" />
+      </template>
+    </template>
+    <template v-else>
+      <span v-html="content"></span>
+    </template>
+  </template>
 </template>
 
 <style scoped>
-.behind-schedule {
-  border: solid 1px var(--vt-c-error);
-}
-.must-be-finished-today {
-  border: solid 1px var(--vt-c-orange);
-}
 input,
 textarea {
   padding: 8px 12px;
@@ -101,32 +102,10 @@ textarea {
 }
 input:focus,
 textarea:focus {
-  background-color: #dfe7;
+  background-color: var(--vt-c-white-mute);
   outline: none;
-  border: solid 1px #798;
+  border: solid 1px var(--vt-c-green-soft);
 }
-
-/* .not-edit-button,
-.edit-button {
-  cursor: pointer;
-}
-
-.not-edit-button:before,
-.edit-button:before {
-  color: #090;
-  border: solid 1px var(--vt-c-green-light);
-  border-radius: 50%;
-  padding: 2px 4px;
-  background: var(--vt-c-green-opacity);
-} */
-
-/* .not-edit-button:before {
-  content: '✔';
-}
-
-.edit-button:before {
-  content: '✎';
-} */
 
 ::-webkit-scrollbar {
   width: 5px;
@@ -156,7 +135,7 @@ textarea:focus {
   --dp-common-padding: 4px;
 }
 .dp__instance_calendar {
-  background: #eee;
+  background: var(--vt-c-white-soft);
   padding: 8px 12px 12px 8px;
 }
 .dp__theme_light {

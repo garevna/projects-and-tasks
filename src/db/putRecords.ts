@@ -14,7 +14,10 @@ export async function putRecords<T>(
         onerror: (error: DOMException) => resolve({ data: null, error }),
       })
 
-      records.forEach((record) => transaction.objectStore(storeName).put(record))
+      records.forEach((record) => {
+        const clone = JSON.parse(JSON.stringify(record))
+        transaction.objectStore(storeName).put(clone)
+      })
     }
   })
 }

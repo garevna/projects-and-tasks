@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Ref } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   options: Array,
@@ -10,17 +10,20 @@ const model = defineModel()
 const expanded: Ref<boolean> = ref(false)
 
 function clickCallback(event: MouseEvent) {
-  console.log('CLICK!')
   const target: HTMLDivElement | null = event.target as HTMLDivElement
   if (!target) return
   if (!target.innerText) return
   model.value = target.innerText
   expanded.value = false
 }
+
+function close() {
+  expanded.value = false
+}
 </script>
 
 <template>
-  <div class="simple-select" @blur="expanded = false">
+  <div class="simple-select" @blur="expanded = false" v-click-outside="close">
     <div class="selected" :class="{ open: expanded }" @click="expanded = !expanded">
       {{ model }}
     </div>
@@ -35,7 +38,6 @@ function clickCallback(event: MouseEvent) {
 <style>
 .simple-select {
   position: relative;
-  font-family: Arial;
   max-width: 360px;
   width: max-content;
   min-width: 120px;
@@ -46,37 +48,24 @@ function clickCallback(event: MouseEvent) {
 }
 
 .selected {
-  background-color: #687;
-  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+  color: var(--vt-c-text-light-2);
+  width: max-content;
 }
 
 .selected:after {
-  position: absolute;
-  content: '';
-  top: 40%;
-  right: -12px;
-  width: 0;
-  height: 0;
-  border: 6px solid transparent;
-  border-color: #0539 transparent transparent transparent;
+  content: '▼';
+  margin-left: 4px;
+  color: var(--vt-c-green-opacity);
 }
 
-.selected.select-arrow-active:after {
-  border-color: transparent transparent #fff transparent;
-  top: 7px;
-}
-
-.options div,
-.selected {
+.options div {
   padding: 8px 16px;
   border: 1px solid transparent;
   border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
   cursor: pointer;
   user-select: none;
-}
-
-.selected {
-  color: #eee;
 }
 
 .options {
@@ -88,6 +77,7 @@ function clickCallback(event: MouseEvent) {
   right: 0;
   z-index: 99;
   box-shadow: 2px 2px 4px #0005;
+  text-align: left;
 }
 
 .select-hide {

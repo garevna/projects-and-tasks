@@ -15,7 +15,6 @@ export async function getRecordsByKey(
     const request: IDBRequest = index.getAll(IDBKeyRange.only(indexValue))
     Object.assign(request, {
       onsuccess: () => {
-        console.log(request.result)
         resolve({
           data: request.result,
           error: request.result

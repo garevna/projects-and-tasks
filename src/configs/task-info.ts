@@ -15,18 +15,18 @@ export enum TaskInfoHeaders {
 export enum TaskInfoClass {
   'total-tasks',
   'finished-tasks',
-  'current-tasks',
+  'must-be-finished-today',
   'behind-schedule',
 }
 
-export type ProjectTasksInfo = {
+export type TasksInfoType = {
   total: number
   behindSchedule: number
   mustBeFinishedToday: number
   finished: number
 }
 
-export const initialProjectTasksInfo = {
+export const initialTasksInfo = {
   total: 0,
   behindSchedule: 0,
   mustBeFinishedToday: 0,

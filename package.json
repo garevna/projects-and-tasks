@@ -14,7 +14,8 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "json-server": "json-server --watch db.json"
+    "json-server": "json-server --watch db.json",
+    "deploy": "git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^10.0.0",

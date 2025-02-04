@@ -2,34 +2,51 @@ import { buildObject } from './buildObject'
 import { getFieldValue } from './getFieldValue'
 import { getPropValue } from './getPropValue'
 import { isKeyOf } from './isKeyOf'
-import { validateProp } from './validateProp'
 import { updateRecords } from './updateRecords'
+import { validateProp } from './validateProp'
 
+import { clickOutsideDirective } from './click-outside-directive'
 import { resizeDirectiveCallback } from './resize-directive-callback'
 import { tooltipDirective } from './tooltip-directive'
-
-import { getListOfProjectStatusValues } from './getListOfProjectStatusValues'
-import { getListOfTaskStatusValues } from './getListOfTaskStatusValues'
-import { getListOfStatusValues } from './getListOfStatusValues'
 
 import { dateToNumber } from './dateToNumber'
 import { dateToString } from './dateToString'
 
-import { getTaskInfoForProject } from './getTaskInfoForProject'
+import { getAlertIcon } from './getAlertIcon'
+import { getAlertIconColor } from './getAlertIconColor'
+
+import { getListOfStatusValues } from './getListOfStatusValues'
+import { refreshTaskInfo } from './refreshTaskInfo'
+
+import { refreshTasks } from './refreshTasks'
+
+import { refreshRemoteTasks } from './refreshRemoteTasks'
+
+import { setupTables } from './setupTables'
+
+import { getTaskStateValue } from './getTaskStateValue'
+
+import { saveTaskRecord } from './saveTaskRecord'
 
 export {
   buildObject,
-  getFieldValue,
-  getPropValue,
-  isKeyOf,
-  validateProp,
-  updateRecords,
-  resizeDirectiveCallback,
-  tooltipDirective,
-  getListOfProjectStatusValues,
-  getListOfTaskStatusValues,
-  getListOfStatusValues,
+  clickOutsideDirective,
   dateToNumber,
   dateToString,
-  getTaskInfoForProject,
+  getAlertIcon,
+  getAlertIconColor,
+  getFieldValue,
+  getListOfStatusValues,
+  getPropValue,
+  getTaskStateValue,
+  isKeyOf,
+  refreshRemoteTasks,
+  refreshTaskInfo,
+  refreshTasks,
+  resizeDirectiveCallback,
+  saveTaskRecord,
+  setupTables,
+  tooltipDirective,
+  updateRecords,
+  validateProp,
 }

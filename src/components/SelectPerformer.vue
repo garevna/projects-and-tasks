@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { usePerformerStore, useTaskStore } from '@/stores'
+// import type { Task } from '@/types'
 import type { Ref } from 'vue'
-import type { Task } from '@/types'
-import { useTaskStore, usePerformerStore } from '@/stores'
-
-// import { defaultAvatar } from '@/configs'
+import { reactive, ref } from 'vue'
 
 const performerStore = usePerformerStore()
 const taskStore = useTaskStore()
 
+const performers = reactive(performerStore.records)
+
 const props = defineProps({
+  subroute: {
+    type: String,
+    required: true,
+  },
   task: {
     type: Object,
     required: true,
@@ -18,44 +22,59 @@ const props = defineProps({
 
 const expanded: Ref<boolean> = ref(false)
 
-// const performerId = computed(() => props.task.performerId)
+const selectedAvatar = ref('')
+const selectedName = ref('')
+const selectedSpeciality = ref('')
+const tooltipText = ref('')
 
-// const selectedAvatar = computed(() => performerStore.getPerformerAvatar(props.task as Task))
-// const selectedName = computed(() => performerStore.getPerformerName(props.task as Task))
-// const selectedSpeciality = computed(() => performerStore.getPerformerSpeciality(props.task as Task))
+setSelected(props.task.performerId)
 
-const selectedAvatar = ref(performerStore.getPerformerAvatar(props.task as Task))
-const selectedName = ref(performerStore.getPerformerName(props.task as Task))
-const selectedSpeciality = ref(performerStore.getPerformerSpeciality(props.task as Task))
+function getTooltipText() {
+  return `${selectedName.value}\n${selectedSpeciality.value}`
+}
 
-const tooltipText = computed(() => `${selectedName.value}\n${selectedSpeciality.value}`)
+function setSelected(performerId: string) {
+  const performer = performers.find((record) => record.id === performerId)
+  if (performer) {
+    selectedAvatar.value = performer.avatar
+    selectedName.value = performer.name
+    selectedSpeciality.value = performer.speciality
+    tooltipText.value = `${selectedName.value}\n${selectedSpeciality.value}`
+  }
+}
 
 function clickCallback(performerId: string) {
   if (!performerId) return
-  taskStore.updatePerformerId(props.task.id, performerId)
-  selectedAvatar.value = performerStore.getPerformerAvatar(props.task as Task)
-  selectedName.value = performerStore.getPerformerName(props.task as Task)
-  selectedSpeciality.value = performerStore.getPerformerSpeciality(props.task as Task)
+  taskStore.updateField(props.subroute, {
+    id: props.task.id,
+    field: 'performerId',
+    value: performerId,
+  })
+  setSelected(performerId)
+  expanded.value = false
+}
+
+function expand() {
+  expanded.value = !expanded.value
+}
+
+function close() {
   expanded.value = false
 }
 </script>
 
 <template>
-  <div class="performer-select" @blur="expanded = false">
-    <div class="selected-performer" :class="{ open: expanded }" @click="expanded = !expanded">
-      <img
-        :src="selectedAvatar"
-        width="64"
-        height="64"
-        v-tooltip="{ text: tooltipText }"
-      />
+  <div class="performer-select" @blur="expanded = false" v-click-outside="close">
+    <div class="selected-performer" :class="{ open: expanded }" @click="expand">
+      <img :src="selectedAvatar" width="64" height="64" v-tooltip="{ text: getTooltipText() }" />
     </div>
     <div class="options" :style="{ display: !expanded ? 'none' : 'block' }">
       <div
-        v-for="(performer, i) of performerStore.records"
+        v-for="(performer, i) of performers"
         :key="i"
         @click="clickCallback(performer.id)"
         class="performer-option"
+        v-tooltip="{ text: `${performer.name}<br />{{ performer.speciality }}` }"
       >
         <img :src="performer.avatar" width="48" height="48" />
         <span>{{ performer.name }}<br />{{ performer.speciality }}</span>
