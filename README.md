@@ -1,39 +1,62 @@
+![android-chrome-192x192](https://github.com/user-attachments/assets/72b50f4c-1d67-4b6e-90f8-aafc88d81ee9)
+
 # task-manager
 
-This project works with backend-api (json-server).
+## API
 
-To start the project, you need to start json-server.
+The project allows two API options:
 
-If you don't know how to do it, google is helpful.
+1. json-server
+2. local database (IndexedDB).
 
-All scripts are described in package.json, install all packages and run json-server and dev
+### json-server
 
-DB in the root of the project (file db.json)
+If you choose the first option, you will need to install the json-server package:
 
-The project is not completed because I'm tired. I'll finish it later.
-
-It was actually a test job, but something seems like it's a pure scam. Just someone really needed to get a project like this for free. And that's how these guys get jobs.
-
-## Project Setup
-
-```sh
-yarn install
+```bash
+yarn add json-server
 ```
 
-### Compile and Hot-Reload for Development
+create a db.json file (to be honest, it would be easier to copy it from the repo)
 
-```sh
-yarn dev
+and run the API on http://localhost:3000:
+
+```bash
+json-server db.json
 ```
 
-### Type-Check, Compile and Minify for Production
+and after that you can run the application and click "Yes" in the popup:
 
-```sh
-yarn build
-```
+![fbeea6d84f76ae668a2952e4d722a547](https://github.com/user-attachments/assets/c05460e0-7300-4cfa-96bc-672e097be801)
 
-### Lint with [ESLint](https://eslint.org/)
+### local DB
 
-```sh
-yarn lint
-```
+If you are too lazy to mess around with API settings or json-server installation is a problem for you, you should choose the second option (i.e. click "No" in the pop-up window above), then you can work with the demo version without additional efforts on your part.
+
+In this case, you have two options: either start with fake source data or start with a "clean slate", i.e. with empty databases.
+
+If you are running the application for the first time, you have two options: either start with fake source data (click "Yes" in the next pop-up window) or start with a “clean slate”, i.e. with an empty database (click "No").
+
+If you have run the application before and entered any data, click "No" to avoid corrupting your data.
+
+![116cc3288ed680fbba23aa4febc76657](https://github.com/user-attachments/assets/ae93959c-ba85-428b-9758-cad1bc03e048)
+
+### Start
+
+Now you are ready to run the demo version of the application. To do this, just click on the icon below:
+
+## [![favicon-32x32](https://github.com/user-attachments/assets/de2ad0e6-d8db-466b-aef6-bc3ee7fc378e) Demo](https://garevna.github.io/projects-and-tasks/)
+
+## Usage
+
+### Buttons, tooltips and menu
+
+[task-manager-01.webm](https://github.com/user-attachments/assets/cd61473e-82bc-4748-91f5-ac87c2d18bc6)
+
+### Resize columns and drag rows
+
+[task-manager-02.webm](https://github.com/user-attachments/assets/4fecb545-8811-44f8-a782-58b0dcf1a77b)
+
+### Edit
+
+https://github.com/user-attachments/assets/25cf93fe-bc57-4c39-9ff2-f1ca3b60d1fe
