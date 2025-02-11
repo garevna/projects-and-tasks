@@ -1,4 +1,4 @@
-export const demo = `{
+const A=`{
   "projects": [
     {
       "id": "1733546687114",
@@ -153,4 +153,4 @@ export const demo = `{
       "speciality": "Front-end developer (Angular)"
     }
   ]
-}`
+}`;export{A as demo};
