@@ -1,23 +1,25 @@
+import { taskStatusAndDeadline, taskStatusIcons } from '@/configs'
 import type { Task } from '@/types'
 import { dateToNumber } from './dateToNumber'
 
-export function getAlertIcon(record: Task, field: keyof Task) {
-  if (record.status === 'finished') {
-    return ''
-  }
-
+export function getAlertIcon(record: Task, field: keyof Task): string | undefined {
   if (field === 'status') {
-    return record.status === 'problem' ? 'error' : ''
-  }
-
-  if (field === 'deadline') {
-    if (record.deadline < dateToNumber(new Date())) {
-      return 'error'
+    if (record.status in taskStatusIcons) {
+      return taskStatusIcons[record.status] as string | undefined
     }
-    if (record.deadline === dateToNumber(new Date())) {
-      return 'warning'
+  } else {
+    if (
+      field === 'deadline' &&
+      record.status in taskStatusAndDeadline &&
+      taskStatusAndDeadline[record.status]
+    ) {
+      return record.deadline < dateToNumber(new Date())
+        ? 'error'
+        : record.deadline === dateToNumber(new Date())
+          ? 'warning'
+          : undefined
+    } else {
+      return undefined
     }
   }
-
-  return ''
 }

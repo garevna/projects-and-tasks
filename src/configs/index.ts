@@ -9,7 +9,7 @@ import { modeHandler } from './mode'
 
 import { PerformerStatusValues } from './performer-status'
 import { ProjectStatusValues } from './project-status'
-import { TaskStatusValues } from './task-status'
+import { TaskStatusValues, taskStatusAndDeadline, taskStatusIcons } from './task-status'
 
 import { TaskInfo, TaskInfoClass, TaskInfoHeaders, initialTasksInfo } from './task-info'
 
@@ -23,6 +23,8 @@ import { popupJsonServer } from './popup-json-server'
 import { popupLocalDBDemo } from './popup-local-db-demo'
 import { popupSaveData } from './popup-save-data'
 
+import { alertIconColors, alertIcons } from './alertIcons'
+
 export {
   PerformerStatusValues,
   ProjectStatusValues,
@@ -30,6 +32,8 @@ export {
   TaskInfoClass,
   TaskInfoHeaders,
   TaskStatusValues,
+  alertIconColors,
+  alertIcons,
   api,
   defaultAvatar,
   initialTasksInfo,
@@ -45,4 +49,6 @@ export {
   projectHeaders,
   submenuItems,
   taskHeaders,
+  taskStatusAndDeadline,
+  taskStatusIcons,
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Header, Record, Task } from '@/types'
 import { getAlertIcon, getAlertIconColor } from '@/utils'
+import { computed } from 'vue'
 
 import IconSet from './IconSet.vue'
 
@@ -11,15 +12,23 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const icon = getAlertIcon(props.record as Task, props.header.field as keyof Task)
+const icon = computed(
+  () => getAlertIcon(props.record as Task, props.header.field as keyof Task) as string | undefined,
+)
+const iconColor = computed(() =>
+  getAlertIconColor(props.record as Task, props.header.field as keyof Task),
+)
+const showIcon = computed(
+  () => (props.header.field === 'status' || props.header.field === 'deadline') && icon.value,
+)
 </script>
 
-<template v-if="header.field === 'status' || header.field === 'deadline'">
+<template>
   <IconSet
-    v-if="icon"
-    :icon-name="icon"
+    v-if="showIcon"
+    :icon-name="getAlertIcon(props.record as Task, props.header.field as keyof Task)"
     :icon-size="18"
-    :icon-color="getAlertIconColor(props.record as Task, header.field as keyof Task)"
+    :icon-color="iconColor"
     style="position: absolute; bottom: 4px; left: 0px"
   />
 </template>

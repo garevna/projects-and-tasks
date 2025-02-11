@@ -3,7 +3,7 @@ import type { Header, Record } from '@/types'
 import { dateToNumber, dateToString, getFieldValue } from '@/utils'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 
 const emit = defineEmits<{
   (e: 'update', payload: { id: string; field: string; value: string | number }): void
@@ -47,16 +47,6 @@ function dateClicked(date: any) {
   Object.assign(props.record, { [props.header.field]: dateToNumber(date) })
   emit('update', { id: props.record.id, field: props.header.field, value: dateToNumber(date) })
 }
-
-const state = computed(() =>
-  props.record.status === 'finished'
-    ? 'finished'
-    : 'state' in props.record
-      ? getFieldValue(props.record, 'state')
-      : '',
-)
-
-watch(state, (newVal, oldVal) => console.log(newVal, oldVal))
 </script>
 
 <template>

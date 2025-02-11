@@ -27,13 +27,9 @@ const from = computed(
 
 <template>
   <h3 class="flex-caption">
-    <IconSet
-      v-if="from"
-      iconName="return"
-      :iconSize="32"
-      v-tooltip="{ text: 'Back' }"
-      @click="goBack"
-    />
+    <template v-if="from">
+      <IconSet iconName="return" :iconSize="32" v-tooltip="{ text: 'Back' }" @click="goBack" />
+    </template>
     {{ current.caption }}
   </h3>
   <DraggableRowsTable />
